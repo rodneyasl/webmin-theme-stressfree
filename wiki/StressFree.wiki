@@ -1,6 +1,6 @@
-#summary Who StressFree Solutions is.
+#summary What or who is StressFree Solutions?
 
-= StressFree who? =
+= StressFree Solutions =
 
 StressFree Solutions is a small (i.e. one person) consulting and software development company based in Wellington, New Zealand. I (David Harrison) specialise in web and collaborative software along with technologies such as Java, Linux, MySQL and Apache.
 
