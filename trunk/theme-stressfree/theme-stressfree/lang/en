@@ -1,0 +1,28 @@
+theme_close=Close
+theme_search=Search
+theme_print=Print
+donate_thankyou=Thank you for your donation
+sidebar_open=Show sidebar
+sidebar_close=Close sidebar
+sidebar_refresh=Refresh
+sidebar_header0=System Information
+sidebar_host=System hostname
+sidebar_os=Operating system
+sidebar_login=Logged in as
+sidebar_from=Logged in from
+sidebar_webmin=Webmin version
+sidebar_usermin=Usermin Version
+sidebar_cpu=CPU load averages
+sidebar_load=$1 (1 min) $2 (5 mins) $3 (15 mins)
+sidebar_real=Real memory
+sidebar_virt=Virtual memory
+sidebar_procs=Running processes
+sidebar_disk=Local disk space
+sidebar_used=$1 total, $2 used
+sidebar_out=$1&nbsp;of&nbsp;$2
+sidebar_quota=Disk usage and quota
+sidebar_header5=Account Information
+sidebar_uquota=Disk quota and usage
+sidebar_time=Time on server
+
+
