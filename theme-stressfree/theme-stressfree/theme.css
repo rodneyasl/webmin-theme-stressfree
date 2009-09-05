@@ -376,13 +376,16 @@ div#headerservers li {
     float: right;
     color: white;
     list-style: none;
-    padding-left: 20px;
 }
 div#headerservers li a {
     color: #fff;
+    margin-left: 20px;
 }
 div#headerservers li a:hover {
     color: #7784FF;
+}
+div#headerservers br {
+    display: none;
 }
 
 div#headertitle h1 {
@@ -474,7 +477,7 @@ INPUT[type=reset]:hover {
     margin: 0px;
 }
 #donation input {
-    border: 0px none;	
+    border: 0px none;
 }
 #donationbutton {
     width: 150px;
@@ -559,8 +562,8 @@ table.icons_table td {
 }
 
 table#contenttable {
-    margin: 0px 0px 0px 0px; 
-    padding: 0px;	
+    margin: 0px 0px 0px 0px;
+    padding: 0px;
     border: 0px none;
     width: 100%;
     border-collapse: collapse;
@@ -575,9 +578,9 @@ td#sidebar.sidebar-visible {
     display: block;
 }
 
-table#contenttable tbody {	
+table#contenttable tbody {
     margin: 0px 0px 0px 1px;
-    padding: 0px;	
+    padding: 0px;
 }
 table#contenttable td {
     border: 0px none;
@@ -604,24 +607,24 @@ table#contenttable td#sidebar {
     float: right;
 }
 #sidebar-info {
-    margin: 0px 0px 15px 0px;	
+    margin: 0px 0px 15px 0px;
     font-size: 9pt;
 }
 #sidebar-info a {
-    color: #fff;	
+    color: #fff;
 }
 #sidebar-info a:hover {
-    color: #7784FF;	
+    color: #7784FF;
 }
 #sidebar-info label {
     display: block;
     font-weight: bold;
-    color: #ccc;	
+    color: #ccc;
     margin: 0px 0px 3px 0px;
 }
 #sidebar-info span {
     font-size: 8pt;
-    color: #fff;	
+    color: #fff;
     padding: 0px 0px 0px 5px;
 }
 #sidebar-info form {
@@ -630,7 +633,7 @@ table#contenttable td#sidebar {
     margin: 3px 0px 3px 0px;
 }
 #sysstats-open {
-    margin: 0px 14px 5px 10px;	
+    margin: 0px 14px 5px 10px;
 }
 #sysstats-close {
     text-align: right;
@@ -646,89 +649,89 @@ table#contenttable td#sidebar {
 }
 #sysstats-close span {
     color: #666;
-    padding: 0px 5px 0px 5px;	
+    padding: 0px 5px 0px 5px;
 }
 #sysstats-detail {
     margin: 0px 0px 0px 7px;
     padding: 8px 0px 15px 0px;
-    border-top: 1px solid #000;	
+    border-top: 1px solid #000;
 }
 #sysstats-detail div {
-    border: 1px solid #ccc;	
+    border: 1px solid #ccc;
 }
 #sysstats-detail img {
     margin: 0px;
     padding: 0px;
-    border: 0px none;	
+    border: 0px none;
 }
 
 .graph {
     border: 1px solid #000;
     padding: 0px!important;
-    display: block;	
+    display: block;
     width: 180px;
     margin: 0px 0px 0px 5px;
     background: #ccc;
 }
 
 #sarg-report {
-	margin-bottom: 10px;
-	border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
 }
 #sarg-report center {
-	margin-bottom: 10px;
-	text-align: left;
+  margin-bottom: 10px;
+  text-align: left;
 }
 #sarg-report table {
-	width: 95%;
-	border-collapse: collapse;
-	border: 0px;
+  width: 95%;
+  border-collapse: collapse;
+  border: 0px;
 }
 #sarg-report td, #sarg-report th {
-	line-height: 125%;
+  line-height: 125%;
 }
 #sarg-report th.logo {
-	display: none;
+  display: none;
 }
 #sarg-report th.title {
-	font-size: 16pt;
-	padding-bottom: 10px;
-	text-align: left;
+  font-size: 16pt;
+  padding-bottom: 10px;
+  text-align: left;
 }
 #sarg-report th.header, #sarg-report th.header2, #sarg-report th.header3 {
-	font-size: 11pt;
-	padding-left: 10px;
+  font-size: 11pt;
+  padding-left: 10px;
 }
 #sarg-report th.header2 {
-	background: #eee;
+  background: #eee;
 }
 
 #sarg-report td.header3 {
-	font-size: 13pt;
+  font-size: 13pt;
 }
 #sarg-report td.link {
-	position: relative;
+  position: relative;
 }
 
 #sarg-report td.data, #sarg-report td.data2 {
-	border-bottom: 1px solid #ccc;
-	padding: 2px 0px 2px 5px!important;
+  border-bottom: 1px solid #ccc;
+  padding: 2px 0px 2px 5px!important;
 }
 #sarg-report td.data2 {
-	border-right: 1px solid #eee;
-	background: #dfebf5;
+  border-right: 1px solid #eee;
+  background: #dfebf5;
 }
 
 #sarg-report td.info {
-	color: #333;
-	padding-top: 7px!important;
-	text-align: center;
-	border-top: 1px solid #666;
-	font-size: 8pt;
+  color: #333;
+  padding-top: 7px!important;
+  text-align: center;
+  border-top: 1px solid #666;
+  font-size: 8pt;
 }
 #sarg-report td.info font {
-	color: #333;
-	display: inline!important;
+  color: #333;
+  display: inline!important;
 }
 
 /* Nifty corners CSS */
