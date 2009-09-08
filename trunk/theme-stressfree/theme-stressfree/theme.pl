@@ -10,8 +10,6 @@ my $_module_name = $module_name || '';
 my $_confdir;
 
 sub theme_header {
-  $tb = "class='hidden'";
-  local $ll;
   &load_theme_library();
   %themetext = &load_language($current_theme);
 
@@ -146,9 +144,9 @@ sub theme_header {
   if ( defined(&theme_prebody) ) {
     &theme_prebody(@_);
   }
+  print "<div id=\"content\">\n";
+  print "<div id=\"header\"><div id=\"headerwrapper\"><div id=\"headercontent\">\n";
   if ( @_ > 1 ) {
-    print "<div id=\"content\">\n";
-    print "<div id=\"header\">\n";
     if ( $gconfig{'sysinfo'} == 2 && $remote_user ) {
       print "<div id=\"headerinfo\">\n";
       printf "%s%s logged into %s %s on %s (%s%s)</td>\n",
@@ -161,10 +159,6 @@ sub theme_header {
         $os_type, $os_version eq "*" ? "" : " $os_version";
       print "</div>\n";
     }
-  }
-  else {
-    print "<div id=\"content\">\n";
-    print "<div id=\"header\">\n";
   }
 
   # Title is just text
@@ -238,7 +232,7 @@ sub theme_header {
     print "</ul></div>\n";
   }
 
-  print "</div>\n";
+  print "</div></div></div>\n";
   if (   $ENV{SCRIPT_NAME} =~ m'^/session_login\.cgi'
     || $ENV{SCRIPT_NAME} =~ m'^/chooser.cgi'
     || $ENV{SCRIPT_NAME} =~ m'^/file/upform\.cgi'
@@ -303,50 +297,10 @@ sub theme_prebody {
     print "initialize('$gconfig{'webprefix'}');\n";
     print "</script>\n";
 
-    my $_webmin_version = get_webmin_version();
-
-    get_miniserv_config( \%miniserv ) unless %miniserv;
-
-    $_confdir = $miniserv{'env_WEBMIN_CONFIG'} . "/theme-stressfree/style-config"
-      if $miniserv{'env_WEBMIN_CONFIG'};
-
-    #@modules =();
-    unless (@modules) {
-      if ( $gconfig{'product'} eq 'webmin' and $_webmin_version >= 1.14 ) {
-        eval '   @modules = &get_visible_module_infos(); ';
-      }
-      else {
-        @modules = &get_available_module_infos(1);
-      }
-    }
-
-    &ReadParse() unless %in;
-
-    my $_in_cat = ( defined( $in{'cat'} ) ? $in{'cat'} : $gconfig{'deftab'} || '' );
-
     print '<div id="menu"><ul>';
 
-    $_in_cat = '__GET_FROM_MODULE__' if $_module_name;
+    generate_menu();
 
-    if (   $gconfig{"notabs_${base_remote_user}"} == 2
-      || $gconfig{"notabs_${base_remote_user}"} == 0 && $gconfig{'notabs'} )
-    {
-      $_in_cat = '__NO_MODS__';
-    }
-
-    # $_in_cat = $gconfig{'deftab'} if $gconfig{'deftab'} and not defined($_in_cat);
-
-    $_in_cat = "" if $_in_cat eq '_OTHERS_';
-
-    if ( $ENV{SCRIPT_NAME} eq "/config.cgi"
-      || ( $gconfig{'product'} eq 'usermin' && $ENV{SCRIPT_NAME} eq "/uconfig.cgi" )
-      )
-    {
-      ( undef, $_module_name ) = split( /\?/, $ENV{'REQUEST_URI'}, 2 );
-      $_in_cat = '__GET_FROM_MODULE__';
-    }
-
-    print __catmods( $_in_cat, \@modules );
     my $nolo =
          $ENV{'ANONYMOUS_USER'}
       || $ENV{'SSL_USER'}
@@ -360,8 +314,7 @@ sub theme_prebody {
 "\n<li id=\"gearsstatus\" class=\"gearsstatus-notselected\"><a id=\"gearslink\" class=\"gears-disabled\" href=\"#\" onclick=\"webminGears.message_view(); return false;\">Gears</a></li>";
 
     if ( $main::session_id and !$nolo ) {
-      print
-        "\n<li id=\"logout\"><a href='"
+      print "\n<li id=\"logout\"><a href='"
         . $gconfig{'webprefix'}
         . "/session_login.cgi?logout=1'>",
         $text{'main_logout'}, "</a></li>";
@@ -405,7 +358,7 @@ sub theme_footer {
     if ( $ENV{SCRIPT_NAME} =~ m'^/file/' || $ENV{SCRIPT_NAME} =~ m'^/filemanager/' ) {
       print "</div>";
     }
-    if ( -e _dirname(__FILE__) . '/nodonation' ) {
+    if ( -e __dirname(__FILE__) . '/nodonation' ) {
       print __donatemessage();
     }
     print "\n</div>";
@@ -439,11 +392,10 @@ sub theme_footer {
       . ( $gconfig{nohostname} ? '' : '@' . get_display_hostname() )
       . "</div>\n";
     print "</div></div>\n\n";
-  }
 
-  ## dwi mods for gears
-  print "\n";
-  print "<!--google gears : start-->
+    ## dwi mods for gears
+    print "\n";
+    print "<!--google gears : start-->
 <div id=\"gears-info-box\" class=\"info-box\" style=\"display: none;\">
   <div id=\"gears-msg1\">
     <h3 class=\"info-box-title\"><span>Speed up Webmin</span></h3>
@@ -487,8 +439,10 @@ sub theme_footer {
     <p>Manifest version: <strong id=\"mfver\">&nbsp;</strong></p>
   </div>
 </div>
-<!--google gears : end-->
-</body></html>";
+<!--google gears : end-->";
+
+  }
+  print "</body></html>";
 }
 
 sub theme_popup_header {
@@ -512,6 +466,166 @@ sub theme_popup_header {
   print "<body " . $_[8] . " " . $_[2] . ">\n";
 }
 
+sub generate_menu {
+  my $old_menu = 0;
+
+  if ( defined( $tconfig{'$old_menu'} ) ) {
+    $old_menu = $tconfig{'$old_menu'};
+  }
+
+  if ( $old_menu == 1 ) {
+    standard_menu();
+  }
+  else {
+    installed_menu();
+  }
+}
+
+sub installed_menu {
+
+  @cats = &get_visible_modules_categories();
+  @modules = map { @{ $_->{'modules'} } } @cats;
+
+  # By default dropdowns and menu icons are enabled
+  # If enable_dropdowns=0 in theme config then do not show dropdown menus
+  # If enable_menuicons=0 in theme config then do not show dropdown icons
+  my $enable_dropdowns = 1;
+  my $enable_menuicons = 1;
+  my $enable_scrollbar = 1;
+
+  if ( defined( $tconfig{'enable_dropdowns'} ) ) {
+    $enable_dropdowns = $tconfig{'enable_dropdowns'};
+  }
+  if ( defined( $tconfig{'enable_menuicons'} ) ) {
+    $enable_menuicons = $tconfig{'enable_menuicons'};
+  }
+  if ( defined( $tconfig{'enable_scrollbar'} ) ) {
+    $enable_scrollbar = $tconfig{'enable_scrollbar'};
+  }
+
+  unless ($_icons) {
+    my $_iconmap =
+        __dirname(__FILE__)
+      . '/icon_map'
+      . ( $gconfig{'product'} eq 'usermin' ? '_usermin' : '' );
+    do $_iconmap;
+    do $_confdir . '/icon_map' if $_confdir;
+  }
+
+  my $default_icon = $_icons->{_DEFAULT_} || 'default16x16.png';
+
+  foreach $c (@cats) {
+
+    if ( $c->{'code'} eq 'webmin' || $c->{'code'} eq 'usermin' ) {
+      $mods .= "<li class=\"webmin\">";
+    }
+    elsif ($c->{'code'} eq 'unused') {
+      $mods .= "<li class=\"unused\">";
+    }
+    else {
+      $mods .= "<li>";
+    }
+    $mods .= "<a href=\"$gconfig{'webprefix'}/?cat="
+      . $c->{'code'} . "\">" . $c->{'desc'} . "</a>";
+
+    if ( $enable_dropdowns > 0 ) {
+      $mods .= "<div class=\"menuitems-";
+      if ( $enable_scrollbar > 0 ) {
+        $mods .= "scroll";
+      }
+      else {
+        $mods .= "noscroll";
+      }
+      $mods .= "\"><ul>";
+
+      foreach my $minfo ( @{ $c->{'modules'} } ) {
+        $mods .=
+          "<li><a title=\""
+          . __htmlify2( $minfo->{'longdesc'}
+            || $minfo->{'desc'}
+            || $minfo->{'name'}
+            || '' )
+          . "\" href=\"$gconfig{webprefix}/$minfo->{'dir'}/$minfo->{index_link}\">";
+
+        if ( $enable_menuicons > 0 ) {
+
+          my $icon = $default_icon;
+          if ( exists( $_icons->{ $minfo->{dir} } ) ) {
+            $icon = $_icons->{ $minfo->{dir} };
+          }
+          else {
+            if ( -e "$root_directory/$minfo->{dir}/images/icon.gif" ) {
+              $icon = "../"
+                . $minfo->{dir}
+                . "/images/icon.gif' width='16' height='16";
+            }
+          }
+
+          $mods .=
+            "<img class='modicon' src='$gconfig{webprefix}/icons/$icon' alt=\""
+            . __htmlify2( $minfo->{'longdesc'}
+              || $minfo->{'desc'}
+              || $minfo->{'name'}
+              || '' )
+            . "\" border=\"0\"><span class=\"iconitem\">";
+        }
+        else {
+          $mods .= "<span class=\"noiconitem\">";
+        }
+
+        $mods .=
+          ( $minfo->{'desc'} || $minfo->{'name'} || '' ) . "</span></a></li>\n";
+      }
+
+      $mods .= "</ul></div></li>";
+    }
+  }
+  print $mods;
+}
+
+sub standard_menu {
+
+  my $_webmin_version = get_webmin_version();
+
+  get_miniserv_config( \%miniserv ) unless %miniserv;
+
+  $_confdir = $miniserv{'env_WEBMIN_CONFIG'} . "/theme-stressfree/style-config"
+    if $miniserv{'env_WEBMIN_CONFIG'};
+
+  #@modules =();
+  unless (@modules) {
+    if ( $gconfig{'product'} eq 'webmin' and $_webmin_version >= 1.14 ) {
+      eval '   @modules = &get_visible_module_infos(); ';
+    }
+    else {
+      @modules = &get_available_module_infos(1);
+    }
+  }
+
+  &ReadParse() unless %in;
+
+  my $_in_cat = ( defined( $in{'cat'} ) ? $in{'cat'} : $gconfig{'deftab'} || '' );
+
+  $_in_cat = '__GET_FROM_MODULE__' if $_module_name;
+
+  if (   $gconfig{"notabs_${base_remote_user}"} == 2
+    || $gconfig{"notabs_${base_remote_user}"} == 0 && $gconfig{'notabs'} )
+  {
+    $_in_cat = '__NO_MODS__';
+  }
+
+  $_in_cat = "" if $_in_cat eq '_OTHERS_';
+
+  if ( $ENV{SCRIPT_NAME} eq "/config.cgi"
+    || ( $gconfig{'product'} eq 'usermin' && $ENV{SCRIPT_NAME} eq "/uconfig.cgi" ) )
+  {
+    ( undef, $_module_name ) = split( /\?/, $ENV{'REQUEST_URI'}, 2 );
+    $_in_cat = '__GET_FROM_MODULE__';
+  }
+
+  print __catmods( $_in_cat, \@modules );
+}
+
 sub __catmods {
 
   # By default dropdowns and menu icons are enabled
@@ -532,13 +646,13 @@ sub __catmods {
   }
 
   my ( $cat, $mods_ar ) = @_;
-  my ( $icon_map, $is_cat, $_dump, $catname );
+  my ( $icon_map, $_dump, $catname );
 
   #  our(%catnames);
 
   unless ($_icons) {
     my $_iconmap =
-        _dirname(__FILE__)
+        __dirname(__FILE__)
       . '/icon_map'
       . ( $gconfig{'product'} eq 'usermin' ? '_usermin' : '' );
     do $_iconmap;
@@ -560,10 +674,6 @@ sub __catmods {
       if $gconfig{'product'} eq 'usermin' and $m->{'category'} eq 'webmin';
     $m->{'category'} = '' if $m->{'category'} eq 'others';
 
-    if ( $_module_name and $_module_name eq $m->{'dir'} ) {
-      $is_cat = $m->{'category'};
-    }
-
     my $_catname = $m->{'category'};
 
     $_catname = "\xa0" if $cat eq '__NO_MODS__';
@@ -573,30 +683,29 @@ sub __catmods {
 
     $catname ||= $_catname;
 
-    my $icon = $default_icon;
-    if ( exists( $_icons->{ $m->{dir} } ) ) {
-      $icon = $_icons->{ $m->{dir} };
-    }
-    else {
-      if ( -e "$root_directory/$m->{dir}/images/icon.gif" ) {
-        $icon = "../" . $m->{dir} . "/images/icon.gif' width='16' height='16";
-      }
-    }
-
     my $newcategorytext =
         "<li><a title=\""
-      . htmlify2( $m->{'longdesc'} || $m->{'desc'} || $m->{'name'} || '' )
+      . __htmlify2( $m->{'longdesc'} || $m->{'desc'} || $m->{'name'} || '' )
       . "\" href=\"$gconfig{webprefix}/$m->{'dir'}/$m->{index_link}\">";
 
     if ( $enable_menuicons > 0 ) {
-      $newcategorytext =
-          $newcategorytext
-        . "<img class='modicon' src='$gconfig{webprefix}/icons/$icon' alt=\""
-        . htmlify2( $m->{'longdesc'} || $m->{'desc'} || $m->{'name'} || '' )
+
+      my $icon = $default_icon;
+      if ( exists( $_icons->{ $m->{dir} } ) ) {
+        $icon = $_icons->{ $m->{dir} };
+      }
+      else {
+        if ( -e "$root_directory/$m->{dir}/images/icon.gif" ) {
+          $icon = "../" . $m->{dir} . "/images/icon.gif' width='16' height='16";
+        }
+      }
+      $newcategorytext .=
+          "<img class='modicon' src='$gconfig{webprefix}/icons/$icon' alt=\""
+        . __htmlify2( $m->{'longdesc'} || $m->{'desc'} || $m->{'name'} || '' )
         . "\" border=\"0\"><span class=\"iconitem\">";
     }
     else {
-      $newcategorytext = $newcategorytext . "<span class=\"noiconitem\">";
+      $newcategorytext .= "<span class=\"noiconitem\">";
     }
 
     $newcategorytext =
@@ -610,22 +719,16 @@ sub __catmods {
 
   }
 
-  $is_cat =~ s/\b(\w)/\U$1/g;
-
   while ( my ( $key, $value ) = each(%menucategories) ) {
     if ( $key eq 'webmin' || $key eq 'usermin' ) {
 
       my $_catname =
            $catnames{$key}
         || $text{ "category_" . $key }
-        || htmlify2( $key || 'Others' );
+        || __htmlify2( $key || 'Others' );
 
-      if ( $key eq $is_cat ) {
-        $mods .= "<li class=\"menuopen\" style=\"font-weight: bold;\">";
-      }
-      else {
-        $mods .= "<li class=\"menuclosed\" style=\"font-weight: bold;\">";
-      }
+      $mods .= "<li class=\"webmin\">";
+
       $mods .=
         "<a href=\"$gconfig{'webprefix'}/?cat=" . $key . "\">" . $_catname . "</a>";
       if ( $enable_dropdowns > 0 ) {
@@ -647,16 +750,10 @@ sub __catmods {
       my $_catname =
            $catnames{$key}
         || $text{ "category_" . $key }
-        || htmlify2( $key || 'Others' );
+        || __htmlify2( $key || 'Others' );
 
-      if ( $key eq $is_cat ) {
-        $mods .= "<li class=\"menuopen\">";
-      }
-      else {
-        $mods .= "<li class=\"menuclosed\">";
-      }
       $mods .=
-        "<a href=\"$gconfig{'webprefix'}/?cat=" . $key . "\">" . $_catname . "</a>";
+        "<li><a href=\"$gconfig{'webprefix'}/?cat=" . $key . "\">" . $_catname . "</a>";
       if ( $enable_dropdowns > 0 ) {
         $mods .= "<div class=\"menuitems-";
         if ( $enable_scrollbar > 0 ) {
@@ -669,12 +766,10 @@ sub __catmods {
       }
     }
   }
-
   return $mods;
-
 }
 
-sub htmlify2 {
+sub __htmlify2 {
   my ($str) = @_;
   return '' unless $str;
   $str =~ s/</&lt\;/g;
@@ -684,7 +779,7 @@ sub htmlify2 {
   return $str;
 }
 
-sub _dirname {
+sub __dirname {
 
   # replacement for File::Basename::dirname
   my ($str) = @_;
@@ -693,19 +788,6 @@ sub _dirname {
   $str =~ tr/\/\\/\//s if $^O and $^O =~ /mswin|win32/i;
   return $str if $str =~ s@/([^/]+)$@@;
   return '.';
-}
-
-sub slurp_file {
-  my $fh = undef;
-  local $/ = undef;
-
-  if ( open( $fh, $_[0] ) ) {
-    binmode $fh;
-    local $_ = <$fh>;
-    close $fh;
-    return $_;
-  }
-  return undef;
 }
 
 sub __donatemessage {
@@ -768,9 +850,6 @@ sub __logincss {
         table tr {
             background: none;
         }
-        table tr.hidden td {
-            padding-top: 148px!important;
-        }
         table tr td {
             font-size: 10px;
             color: #666;
@@ -784,12 +863,13 @@ sub __logincss {
             font-size: 12px;
             color: black;
         }
-        table tr.hidden td {
+        table tr.tabheader td {
             text-align: center;
             padding-bottom: 15px;
             background: none;
+            padding-top: 149px!important;
         }
-        table tr.hidden td b {
+        table tr.tabheader td b {
             font-weight: normal;
             font-size: 18px;
             color: white;
