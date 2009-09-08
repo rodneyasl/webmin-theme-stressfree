@@ -12,4 +12,5 @@ enable_menuicons=1
 enable_sidebar=1
 enable_scrollbar=1
 dropdown_rows=12
+old_menu=0
 logo=
