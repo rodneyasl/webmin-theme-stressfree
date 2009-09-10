@@ -92,17 +92,13 @@ sub theme_header {
     print "}\n";
     print "</style>\n";
 
-    print "<!--[if IE]>\n";
+    print "<!--[if lt IE 7]>\n";
     print "<style type=\"text/css\">\n";
     print
 "body { behavior: url($gconfig{'webprefix'}/theme-stressfree/csshover.htc); }\n";
     print "</style>\n";
     print
-"<link rel=\"stylesheet\" type=\"text/css\" href=\"$gconfig{'webprefix'}/theme-stressfree/theme_ie.css\">\n";
-    print "<![endif]-->\n";
-    print "<!--[if IE 7]>\n";
-    print
-"<link rel=\"stylesheet\" type=\"text/css\" href=\"$gconfig{'webprefix'}/theme-stressfree/theme_ie7.css\">\n";
+"<link rel=\"stylesheet\" type=\"text/css\" href=\"$gconfig{'webprefix'}/theme-stressfree/theme_ie6.css\">\n";
     print "<![endif]-->\n";
   }
   if ( $ENV{SCRIPT_NAME} =~ m'^/chooser.cgi' ) {
@@ -169,6 +165,9 @@ sub theme_header {
 
   if ( @_ > 1 ) {
     print "<div id=\"headerservers\"><ul>";
+    if ($gconfig{'log'} && &foreign_available("webminlog")) {
+      print "<li><a onClick='showLogs(); return false;' href='$gconfig{'webprefix'}/webminlog/'>View log</a></li>";
+    }
     if ( $ENV{'HTTP_WEBMIN_SERVERS'} ) {
       print "<li><a href='$ENV{'HTTP_WEBMIN_SERVERS'}'>",
         "$text{'header_servers'}</a></li>\n";
@@ -189,7 +188,7 @@ sub theme_header {
           "$text{'main_logout'}</a></li>";
       }
       elsif ( $gconfig{'gotoone'} && @avail == 1 && !$nolo ) {
-        print "<li><a href=$gconfig{'webprefix'}/switch_user.cgi>",
+        print "<li><a href='$gconfig{'webprefix'}/switch_user.cgi'>",
           "$text{'main_switch'}</a></li>";
       }
       elsif ( !$gconfig{'gotoone'} || @avail > 1 ) {
