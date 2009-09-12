@@ -13,6 +13,11 @@ sub theme_header {
   &load_theme_library();
   %themetext = &load_language($current_theme);
 
+  my $dropdown_rows = 12;
+  if ( defined( $tconfig{'dropdown_rows'} ) ) {
+    $dropdown_rows = $tconfig{'dropdown_rows'};
+  }
+
   print
 "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n";
   print "<html>\n";
@@ -82,10 +87,6 @@ sub theme_header {
 "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"http://feeds.feedburner.com/StressFreeSolutions-Webmin/\">\n";
 
     # Dropdown menu rows if scrollable
-    my $dropdown_rows = 12;
-    if ( defined( $tconfig{'dropdown_rows'} ) ) {
-      $dropdown_rows = $tconfig{'dropdown_rows'};
-    }
     print "<style type=\"text/css\">\n";
     print "div#menu ul li div.menuitems-scroll { ";
     print "height: " . $dropdown_rows * 25 . "px; ";
@@ -166,7 +167,7 @@ sub theme_header {
   if ( @_ > 1 ) {
     print "<div id=\"headerservers\"><ul>";
     if ($gconfig{'log'} && &foreign_available("webminlog")) {
-      print "<li><a onClick='showLogs(); return false;' href='$gconfig{'webprefix'}/webminlog/'>View log</a></li>";
+      print "<li><a href='javascript:showLogs();'>View log</a></li>";
     }
     if ( $ENV{'HTTP_WEBMIN_SERVERS'} ) {
       print "<li><a href='$ENV{'HTTP_WEBMIN_SERVERS'}'>",
@@ -283,7 +284,7 @@ sub theme_prebody {
     || $ENV{SCRIPT_NAME} =~ m'^/filemanager/upload\.cgi'
     || $ENV{SCRIPT_NAME} =~ m'^/file/upload\.cgi' )
   {
-    print "<div id=\"uploadtitle\"><span>Webmin File Upload</span></div>";
+    print "<div id=\"uploadtitle\"><span>$themetext{'theme_upload'}</span></div>";
     print "<div id=\"uploadoption\">";
     print "<ul>";
     print
@@ -307,10 +308,10 @@ sub theme_prebody {
       || $ENV{'HTTP_USER_AGENT'} =~ /webmin/i;
 
     print
-"\n<li id=\"searchbutton\" class=\"search-notselected\"><a href=\"#\" onclick=\"viewSearch()\">Search</a></li>";
+"\n<li id=\"searchbutton\" class=\"search-notselected\"><a href=\"#\" onclick=\"viewSearch()\">$themetext{'theme_search'}</a></li>";
 
     print
-"\n<li id=\"gearsstatus\" class=\"gearsstatus-notselected\"><a id=\"gearslink\" class=\"gears-disabled\" href=\"#\" onclick=\"webminGears.message_view(); return false;\">Gears</a></li>";
+"\n<li id=\"gearsstatus\" class=\"gearsstatus-notselected\"><a id=\"gearslink\" class=\"gears-disabled\" href=\"#\" onclick=\"webminGears.message_view(); return false;\">$themetext{'gears_title'}</a></li>";
 
     if ( $main::session_id and !$nolo ) {
       print "\n<li id=\"logout\"><a href='"
@@ -392,50 +393,64 @@ sub theme_footer {
       . "</div>\n";
     print "</div></div>\n\n";
 
+    ## Form for loading logs
+    print "
+<form class=\"hiddenform\" name=\"sfViewAllLogs\" id=\"sfViewAllLogs\" method=\"get\" action=\"$gconfig{'webprefix'}/webminlog/search.cgi\">
+<input type=\"hidden\" name=\"tall\" id=\"tall\" value=\"4\" />
+<input type=\"hidden\" name=\"uall\" id=\"uall\" value=\"1\" />
+<input type=\"hidden\" name=\"mall\" id=\"mall\" value=\"0\" />
+<input type=\"hidden\" name=\"mall\" id=\"mall\" value=\"1\" />
+</form>
+<form class=\"hiddenform\" name=\"sfViewModuleLogs\" id=\"sfViewModuleLogs\" method=\"get\" action=\"$gconfig{'webprefix'}/webminlog/search.cgi\">
+<input type=\"hidden\" name=\"tall\" id=\"tall\" value=\"4\" />
+<input type=\"hidden\" name=\"uall\" id=\"uall\" value=\"1\" />
+<input type=\"hidden\" name=\"mall\" id=\"mall\" value=\"0\" />
+<input type=\"hidden\" name=\"module\" id=\"module\" value=\"\" />
+</form>";
+
     ## dwi mods for gears
     print "\n";
     print "<!--google gears : start-->
 <div id=\"gears-info-box\" class=\"info-box\" style=\"display: none;\">
   <div id=\"gears-msg1\">
-    <h3 class=\"info-box-title\"><span>Speed up Webmin</span></h3>
-    <p>This Webmin theme supports Google Gears to speeds page loading time by caching images, scripts, and CSS files locally.<br/>
-       <a href=\"http://gears.google.com/\" target=\"_blank\">Learn more about Google Gears.</a>
-        </p>
+    <h3 class=\"info-box-title\"><span>$themetext{'gears_msg1_title'}</span></h3>
+    <p>$themetext{'gears_msg1_s1'}.<br/>
+       <a href=\"http://gears.google.com/\" target=\"_blank\">$themetext{'gears_msg1_s2'}</a>.</p>
 
-    <p><strong>Gears should not be enabled on a public/shared computer</strong>.</p>
+    <p><strong>$themetext{'gears_warning'}</strong>.</p>
     <div class=\"submit\">
-      <a href=\"javascript:webminGears.message_view();\">Cancel</a>
-      <button onclick=\"window.open('http://gears.google.com/?action=install', '_blank'); return true;\" class=\"button\">Install Gears</button>
-        </div>
+      <a href=\"javascript:webminGears.message_view();\">$themetext{'theme_cancel'}</a>
+      <button onclick=\"window.open('http://gears.google.com/?action=install', '_blank'); return true;\" class=\"button\">$themetext{'gears_install'}</button>
+    </div>
   </div>
 
   <div id=\"gears-msg2\" style=\"display: none;\">
-    <h3 class=\"info-box-title\"><span>Gears Status</span></h3>
-    <p>Gears is <strong>installed</strong> on this computer but is <strong>not enabled</strong> for use with this Webmin site.</p>
-    <p>To enable, ensure this URL is not on the denied list in Gears Settings (in the browser's Tools menu), then click <strong>Enable Gears</strong>.</p>
+    <h3 class=\"info-box-title\"><span>$themetext{'gears_msg2_title'}</span></h3>
+    <p>$themetext{'gears_msg2_s1'}.</p>
+    <p>$themetext{'gears_msg2_s2'}.</p>
 
-    <p><strong>Gears should not be enabled on a public/shared computer</strong>.</p>
+    <p><strong>$themetext{'gears_warning'}</strong>.</p>
     <div class=\"submit\">
-            <a href=\"javascript:webminGears.message_view();\">Cancel</a>
-            <button class=\"button\" onclick=\"webminGears.getPermission();\">Enable Gears</button>
+            <a href=\"javascript:webminGears.message_view();\">$themetext{'theme_cancel'}</a>
+            <button class=\"button\" onclick=\"webminGears.getPermission();\">$themetext{'gears_enable'}</button>
         </div>
   </div>
 
   <div id=\"gears-msg3\" style=\"display: none;\">
-    <h3 class=\"info-box-title\"><span>Gears Status</span></h3>
-    <p>Gears is <strong>installed and enabled</strong> on this computer. You can disable it from your browser Tools menu.</p>
-    <p>If there are any errors, try disabling Gears, then reload the page and enable it again.</p>
-    <p>Local storage status:
+    <h3 class=\"info-box-title\"><span>$themetext{'gears_msg3_title'}</span></h3>
+    <p>$themetext{'gears_msg3_s1'}.</p>
+    <p>$themetext{'gears_msg3_s2'}.</p>
+    <p>$themetext{'gears_msg3_s3'}
             <span id=\"gears-upd-number\">&nbsp;</span>
             <span id=\"gears-wait\">&nbsp;</span>
         </p>
     <div class=\"submit\">
-            <a href=\"javascript:webminGears.message_view();\">Close</a>
+            <a href=\"javascript:webminGears.message_view();\">$themetext{'theme_close'}</a>
         </div>
   </div>
 
   <div id=\"gears-msg4\" class=\"small\" style=\"display: none;\">
-    <p>Manifest version: <strong id=\"mfver\">&nbsp;</strong></p>
+    <p>$themetext{'gears_msg4_s1'} <strong id=\"mfver\">&nbsp;</strong></p>
   </div>
 </div>
 <!--google gears : end-->";
@@ -468,8 +483,8 @@ sub theme_popup_header {
 sub generate_menu {
   my $old_menu = 0;
 
-  if ( defined( $tconfig{'$old_menu'} ) ) {
-    $old_menu = $tconfig{'$old_menu'};
+  if ( defined( $tconfig{'old_menu'} ) ) {
+    $old_menu = $tconfig{'old_menu'};
   }
 
   if ( $old_menu == 1 ) {

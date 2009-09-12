@@ -108,13 +108,10 @@ function showLogs() {
   }
   if (mod && mod.indexOf('.cgi') <= 0) {
     // Show one module's logs
-    window.location = '/' + webminpath
-        + 'webminlog/search.cgi?tall=4&uall=1&fall=1&mall=0&module='
-        + mod;
+    document.sfViewModuleLogs.module.value = mod;
+    document.sfViewModuleLogs.submit();
   } else {
-    // Show all logs
-    window.location = '/' + webminpath
-        + 'webminlog/search.cgi?tall=4&uall=1&fall=1&mall=0&mall=1'
+    document.sfViewAllLogs.submit();
   }
 }
 
