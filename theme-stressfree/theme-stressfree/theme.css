@@ -127,6 +127,12 @@ form {
     border-bottom: #CCC 1px solid;
     border-right: #CCC 1px solid;
 }
+form.hiddenform {
+  padding: 0px;
+  margin: 0px;
+  background: none;
+  border: none;
+}
 
 div#container {
     width: 100%;
@@ -531,6 +537,9 @@ INPUT[type=submit]:hover {
 }
 INPUT[type=reset]:hover {
     background: url('images/button_hover.gif') repeat-x top left white;
+}
+input.ui_radio, input.ui_checkbox {
+    border: none;
 }
 #donation form {
     padding: 0px;
