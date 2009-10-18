@@ -78,9 +78,7 @@ sub theme_header {
     print
 "<link rel=\"stylesheet\" type=\"text/css\" href=\"$gconfig{'webprefix'}/theme-stressfree/print.css\" media=\"print\">\n";
     print
-"<script type=\"text/javascript\" src=\"$gconfig{'webprefix'}/theme-stressfree/javascript/prototype.js\"></script>\n";
-    print
-"<script type=\"text/javascript\" src=\"$gconfig{'webprefix'}/theme-stressfree/javascript/scriptaculous.js\"></script>\n";
+"<script type=\"text/javascript\" src=\"$gconfig{'webprefix'}/theme-stressfree/javascript/protopacked.js\"></script>\n";
     print
 "<script type=\"text/javascript\" src=\"$gconfig{'webprefix'}/theme-stressfree/javascript/application.js\"></script>\n";
     print
@@ -336,7 +334,32 @@ sub theme_prebody {
 }
 
 sub theme_footer {
-
+	
+  for(my $i=0; $i+1<@_; $i+=2) {
+  	print "<div id=\"footerlinks\">";
+    my $url = $_[$i];
+    if ($url ne '/' || !$tconfig{'noindex'}) {
+      if ($url eq '/') {
+        $url = "/?cat=$this_module_info{'category'}";
+      }
+      elsif ($url eq '' && &get_module_name()) {
+        $url = "/".&get_module_name()."/".
+        $this_module_info{'index_link'};
+      }
+      elsif ($url =~ /^\?/ && &get_module_name()) {
+        $url = "/".&get_module_name()."/$url";
+      }
+      $url = "$gconfig{'webprefix'}$url" if ($url =~ /^\//);
+      if ($i == 0) {
+        print "<a href=\"$url\" class=\"img\"><img alt=\"<-\" src=\"$gconfig{'webprefix'}/images/left.gif\"></a>\n";
+      } else {
+        print " | ";
+      }
+      print " <a href=\"$url\">",&text('main_return', $_[$i+1]),"</a>\n";
+    }
+    print "</div>";
+  }
+  
   if ( ( $ENV{SCRIPT_NAME} =~ m'^/session_login\.cgi' ) ) {
 
     #nothing
