@@ -413,6 +413,13 @@ div#maincontent center.ui_post_header font {
     margin: 5px 0px;
     padding: 0px 0px 3px 10px;
 }
+.ui_form_end_buttons td {
+    padding: 0.3em 0.1em 1em 0!important;
+}
+.ui_form_end_buttons td input.ui_submit, .ui_form_end_buttons td input.ui_button {
+    margin-left: 0;
+    margin-right: 0;
+}
 div#content {
     background: url('images/header-background.jpg') top left repeat-x;
 }
