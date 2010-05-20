@@ -402,7 +402,7 @@ div#maincontent center form font {
     display: block;
 }
 div#maincontent center.ui_post_header font {
-    display: block;
+    display: block!important;
     text-align: left;
     color: #666;
     letter-spacing: -1px;
@@ -480,9 +480,19 @@ div#headertitle p {
     margin: 0px;
     float: left;
 }
+div#headertitle p a {
+    color: #eee;    
+}
+div#headertitle p a:hover {
+    color: #7784ff;
+}
+div#headertitle img {
+    display: none;  
+}
 
 div#footerlinks {
     margin: 10px 0px 10px 10px; 
+    float: left;
 }
 div#footerlinks a {
     line-height: 19px;  
@@ -639,6 +649,7 @@ div#maincontent table#cattabs td#selectedcat b {
 div#maincontent tr.tabheader td {
     padding-top: 0.2em;
     padding-bottom: 0.2em;
+    white-space : nowrap;
 }
 div#maincontent table.ui_tabs td {
   padding: 0;
@@ -859,4 +870,25 @@ table#contenttable td#sidebar {
 #sarg-report td.info font {
   color: #333;
   display: inline!important;
+}
+
+/* MySQL specific themes */
+div.mysql div#maincontent center font {
+    display: inline;
+    vertical-align: top;
+}
+div.mysql div#maincontent form.ui_form {
+    max-width: 900px;
+    overflow-x: scroll;
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #999;
+    border-bottom: 1px solid #999;
+    padding: 5px 0 5px 0;
+}
+div.mysql div#maincontent form.ui_form a.select_all {
+    padding-left: 5px;
+}
+div.mysql div#maincontent tr.tabheader td img {
+    vertical-align: middle;
 }
