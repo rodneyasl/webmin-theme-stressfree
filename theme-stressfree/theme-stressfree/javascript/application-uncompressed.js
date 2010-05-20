@@ -39,7 +39,9 @@ function initialize(path) {
     if (prev_onload != null) {
       prev_onload();
     }
-    $('gearslink').className = webminGears.status_class();
+    if($('gearslink') != undefined) {
+        $('gearslink').className = webminGears.status_class();
+    }
     loadSidebar();
 
     new Ajax.Autocompleter("searchfield", "searchfield_choices", webminpath

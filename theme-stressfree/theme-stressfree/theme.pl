@@ -72,7 +72,6 @@ sub theme_header {
     print
 "<link rel=\"shortcut icon\" href=\"$gconfig{'webprefix'}/theme-stressfree/images/favicon.ico\">\n";
 
-    # Rounded corners support
     print
 "<link rel=\"stylesheet\" type=\"text/css\" href=\"$gconfig{'webprefix'}/theme-stressfree/theme.css\">\n";
     print
@@ -81,9 +80,17 @@ sub theme_header {
 "<script type=\"text/javascript\" src=\"$gconfig{'webprefix'}/theme-stressfree/javascript/protopacked.js\"></script>\n";
     print
 "<script type=\"text/javascript\" src=\"$gconfig{'webprefix'}/theme-stressfree/javascript/application.js\"></script>\n";
+
+    # RSS news link
+    my $enable_rss = 1;
+    if ( defined( $tconfig{'enable_rss'} ) ) {
+      $enable_rss = $tconfig{'$enable_rss'};
+    }
+    if ( $enable_rss > 0 ) {
     print
 "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS\" href=\"http://feeds.feedburner.com/StressFreeSolutions-Webmin/\">\n";
-
+    }
+    
     # Dropdown menu rows if scrollable
     print "<style type=\"text/css\">\n";
     print "div#menu ul li div.menuitems-scroll { ";
@@ -116,7 +123,7 @@ sub theme_header {
   print "</head>\n";
 
   print "<body " . $_[8] . ">\n";
-  print "<div id=\"container\">";
+  print "<div id=\"container\" class=\"".  $module_name . "\">";
   local $hostname = &get_display_hostname();
   local $version  = &get_webmin_version();
   local $prebody  = $tconfig{'prebody'};
@@ -308,9 +315,16 @@ sub theme_prebody {
     print
 "\n<li id=\"searchbutton\" class=\"search-notselected\"><a href=\"#\" onclick=\"viewSearch()\">$themetext{'theme_search'}</a></li>";
 
+    # Google Gears activation button
+    my $enable_gears = 1;
+    if ( defined( $tconfig{'enable_gears'} ) ) {
+      $enable_gears = $tconfig{'enable_gears'};
+    }
+    if ( $enable_gears > 0 ) {
     print
 "\n<li id=\"gearsstatus\" class=\"gearsstatus-notselected\"><a id=\"gearslink\" class=\"gears-disabled\" href=\"#\" onclick=\"webminGears.message_view(); return false;\">$themetext{'gears_title'}</a></li>";
-
+    }
+    
     if ( $main::session_id and !$nolo ) {
       print "\n<li id=\"logout\"><a href='"
         . $gconfig{'webprefix'}
@@ -431,9 +445,14 @@ sub theme_footer {
 <input type=\"hidden\" name=\"module\" id=\"module\" value=\"\" />
 </form>";
 
-    ## dwi mods for gears
-    print "\n";
-    print "<!--google gears : start-->
+    my $enable_gears = 1;
+    if ( defined( $tconfig{'enable_gears'} ) ) {
+      $enable_gears = $tconfig{'enable_gears'};
+    }
+    if ( $enable_gears > 0 ) {
+        ## dwi mods for gears
+        print "\n";
+        print "<!--google gears : start-->
 <div id=\"gears-info-box\" class=\"info-box\" style=\"display: none;\">
   <div id=\"gears-msg1\">
     <h3 class=\"info-box-title\"><span>$themetext{'gears_msg1_title'}</span></h3>
@@ -477,7 +496,7 @@ sub theme_footer {
   </div>
 </div>
 <!--google gears : end-->";
-
+    }
   }
   print "</body></html>";
 }
