@@ -887,7 +887,18 @@ sub __logincss {
             display: none;
         }
         h3 {
-            display: none;
+            position: absolute;
+            width: 100%;
+            background: #faf9eb;
+            font-size: 1.3em;
+            border-bottom: 1px solid #333;
+            padding: 8px 0 8px 0;
+            margin: 0;
+            text-align: center;
+            top: 0;
+            left: 0;
+            color: #333;
+            font-weight: normal;
         }
         form {
             background: url($gconfig{'webprefix'}/theme-stressfree/images/loginbackground.gif) top left no-repeat;
