@@ -162,11 +162,6 @@ div#menu ul li.webmin {
 div#menu ul li.unused a {
     color: #666!important;
 }
-div#menu ul li#logout {
-    float: right;
-    padding-right: 10px;
-    width: 40px;
-}
 div#menu ul li:hover {
     background: url('images/menuhover.jpg') top left repeat-x;
     color: white;
@@ -182,9 +177,6 @@ div#menu ul li a {
     display: block;
     padding: 7px 13px 5px 13px;
 }
-div#menu ul li#logout {
-    width: 56px;
-}
 div#menu ul li:hover ul li a {
     color: black;
 }
@@ -193,8 +185,18 @@ div#menu ul li.menuitem ul li a:hover {
     background: url('images/menuhover.jpg') top left repeat-x;
     color: white;
 }
+div#menu ul li#logout {
+    float: right;
+}
+div#menu ul li#logout:hover {
+	background: none;
+}
+div#menu ul li#logout a {
+	color: #666;
+}
 div#menu ul li#logout a:hover {
     background: none;
+    color: #000!important;
 }
 div#menu ul li div {
     width: 244px;
@@ -276,8 +278,11 @@ div#menu ul li#gearsstatus a {
     padding-left: 21px;
     padding-right: 10px;
 }
-div#menu ul li.gearsstatus-notselected a, div#menu ul li.gearsstatus-notselected a:hover {
+div#menu ul li.gearsstatus-notselected a {
    color: #666!important;
+}
+div#menu ul li.gearsstatus-notselected a:hover {
+   color: #000!important;
 }
 div#menu ul li.gearsstatus-selected a, div#menu ul li.gearsstatus-selected a:hover {
    color: #fff!important;
