@@ -176,30 +176,31 @@ div#menu ul li a {
     color: black;
     display: block;
     padding: 7px 13px 5px 13px;
+    outline: none;
 }
 div#menu ul li:hover ul li a {
-    color: black;
+    color: #000;
 }
 
 div#menu ul li.menuitem ul li a:hover {
     background: url('images/menuhover.jpg') top left repeat-x;
-    color: white;
+    color: #fff;
 }
 div#menu ul li#logout {
     float: right;
 }
 div#menu ul li#logout:hover {
-	background: none;
+    background: none;
 }
 div#menu ul li#logout a {
-	color: #666;
+    color: #666;
 }
 div#menu ul li#logout a:hover {
     background: none;
     color: #000!important;
 }
 div#menu ul li div {
-    width: 244px;
+    width: 245px;
     position: absolute;
     font-family: Helvetica, Arial, sans-serif;
     z-index: 1000;
@@ -213,13 +214,11 @@ div#menu ul li div.menuitems-scroll {
 }
 
 div#menu ul li ul li {
-    width: 226px;
+    width: 100%;
     text-align: left;
     background: url('images/menu_background.jpg') top left repeat-y white;
     padding: 0px;
-    font-size: 10pt;
-    border-left: 1px solid #EEF3E9;
-    border-right: 1px solid #D3DACD;
+    font-size: 13px;
     border-bottom: 1px solid #E6ECE0;
     vertical-align: middle;
     font-weight: normal;
@@ -227,17 +226,25 @@ div#menu ul li ul li {
 div#menu ul li ul li a {
     display: block;
     color: black;
-    padding-top: 2px;
-    padding-bottom: 3px;
-    padding-left: 5px;
+    padding: 3px 0px 3px 0px;
     z-index: 1002;
+    width: 100%;
 }
-div#menu ul li ul li a span {
-    padding: 0px 0px 0px 8px;
-}
-div#menu ul li ul li a span.noiconitem {
+
+div#menu ul li ul li div {
     display: block;
-    padding: 5px 0px 3px 8px;
+    position: static;
+    width: auto;
+}
+div#menu ul li ul li div.menuicon {
+    margin: 0 0 0 6px;  
+}
+div#menu ul li ul li div.menuitem {
+    margin: 0px 0px 0px 18px;
+    padding: 5px 0px 5px 0px;
+}
+div#menu ul li ul li div.menuicon div.menuitem {
+    margin: 0px 0px 0px 22px;   
 }
 
 div#menu ul li#searchbutton {

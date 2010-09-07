@@ -616,21 +616,13 @@ sub installed_menu {
                 . "/images/icon.gif' width='16' height='16";
             }
           }
-
-          $mods .=
-            "<img class='modicon' src='$gconfig{webprefix}/icons/$icon' alt=\""
-            . __htmlify2( $minfo->{'longdesc'}
-              || $minfo->{'desc'}
-              || $minfo->{'name'}
-              || '' )
-            . "\" border=\"0\"><span class=\"iconitem\">";
+          $mods .= "<div class=\"menuicon\" style=\"background:url('$gconfig{webprefix}/icons/$icon') left center no-repeat;\">";
         }
-        else {
-          $mods .= "<span class=\"noiconitem\">";
+        $mods .= "<div class=\"menuitem\">" . ( $minfo->{'desc'} || $minfo->{'name'} || '' ) . "</div>";
+        if ( $enable_menuicons > 0 ) {
+            $mods .= "</div>"
         }
-
-        $mods .=
-          ( $minfo->{'desc'} || $minfo->{'name'} || '' ) . "</span></a></li>\n";
+        $mods .= "</a></li>\n";
       }
 
       $mods .= "</ul></div></li>";
