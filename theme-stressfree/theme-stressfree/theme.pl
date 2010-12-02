@@ -1,6 +1,6 @@
 #
-# Tiger theme by David Harrison
-# Last modified 5/9/2009
+# StressFree theme by David Harrison
+# Last modified 2/12/2010
 #
 # gears mods by Dwi Kristianto
 # last: 20 dec 2008 (early version)
@@ -611,12 +611,10 @@ sub installed_menu {
           }
           else {
             if ( -e "$root_directory/$minfo->{dir}/images/icon.gif" ) {
-              $icon = "../"
-                . $minfo->{dir}
-                . "/images/icon.gif' width='16' height='16";
+              $icon = "../" . $minfo->{dir} . "/images/icon.gif";
             }
           }
-          $mods .= "<div class=\"menuicon\" style=\"background:url('$gconfig{webprefix}/icons/$icon') left center no-repeat;\">";
+          $mods .= "<div class=\"menuicon\" style=\"background:url('$gconfig{webprefix}/icons/$icon') left center no-repeat; background-size: 16px; -moz-background-size: 16px;\">";
         }
         $mods .= "<div class=\"menuitem\">" . ( $minfo->{'desc'} || $minfo->{'name'} || '' ) . "</div>";
         if ( $enable_menuicons > 0 ) {
