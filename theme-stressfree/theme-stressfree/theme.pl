@@ -890,19 +890,19 @@ sub __logincss {
             color: #333;
             font-weight: normal;
         }
-        form {
-            background: url($gconfig{'webprefix'}/theme-stressfree/images/loginbackground.gif) top left no-repeat;
-            width: 320px;
-            height: 360px;
-            margin: auto;
-        }
         table {
             border: 0px none;
             background: none;
         }
-        table.ui_table {
-            background: url($logo) center 12px no-repeat;
-            width: 80%;
+        center {
+            background: url($gconfig{'webprefix'}/theme-stressfree/images/loginbackground.gif) top left no-repeat;
+            width: 320px;
+            height: 370px;
+            margin: auto;
+        }
+        table.ui_table table {
+            margin: 20px 25px 0 25px;
+            width: 269px;
         }
         table tr {
             background: none;
@@ -922,14 +922,22 @@ sub __logincss {
         }
         table tr.tabheader td {
             text-align: center;
-            padding-bottom: 15px;
             background: none;
-            padding-top: 149px!important;
+            padding-top: 150px!important;
+            background: url($logo) center 12px no-repeat;
         }
         table tr.tabheader td b {
             font-weight: normal;
             font-size: 18px;
             color: white;
+        }
+        table tr td.ui_label b {
+        	display: block;
+        	text-align: right;
+        	padding-top: 3px;
+        }
+        table td.ui_value input.ui_textbox, table td.ui_value input.ui_password {
+        	width: 140px;
         }
         INPUT {
             visibility: visible;
